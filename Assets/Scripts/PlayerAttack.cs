@@ -18,20 +18,20 @@ public class PlayerAttack : MonoBehaviour
     {
         mm = GameObject.FindObjectOfType<MainMenu>();
         gm = GameObject.FindObjectOfType<GameManager>();
+        curTime = 0;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(curTime <= 0)
+        curTime += Time.fixedDeltaTime;
+        if(curTime >= shootSpeed)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) && mm.isGameStart && !gm.isPauseOn && !gm.isDeath)
+            if (Input.GetKey(KeyCode.Mouse0) && mm.isGameStart && !gm.isPauseOn && !gm.isDeath)
             {
                 Instantiate(Magic, pos.position, transform.rotation);
+                curTime = 0;
             }
-            curTime = shootSpeed;
         }
-
-        curTime -= Time.deltaTime;
     }
 }

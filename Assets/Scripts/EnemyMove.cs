@@ -15,6 +15,8 @@ public class EnemyMove : MonoBehaviour
     public int damage;
     PlayerMove player;
 
+    public int health;
+
 
     void Start()
     {
@@ -47,7 +49,10 @@ public class EnemyMove : MonoBehaviour
         }
         else if(collisionedObject.CompareTag("Attack"))
         {
-            Destroy(gameObject);
+            if (health == 0)
+                Destroy(gameObject);
+            else
+                health--;
         }
     }
 

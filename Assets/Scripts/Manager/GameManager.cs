@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Image playerHeart;
     public Sprite[] hearts;
     int heartCount;
+    public GameObject LoadingPanel;
 
     //Pause UI 관련
     public GameObject PauseUI;
@@ -43,11 +44,12 @@ public class GameManager : MonoBehaviour
     public bool isTextOn = false;
     TalkManager tm;
     int talkIndex;
+    public bool hadTalked;
 
     //아이템 관련
     public int Doll = 0;            //layer 15
     public int unicornHorns = 0;    //layer 16
-   // public int candle = 0;          //layer 17
+    //public int candle = 0;          //layer 17
     public int medicine = 0;        //layer 18
 
     //스테이지 전환 관련
@@ -71,9 +73,11 @@ public class GameManager : MonoBehaviour
         PauseUI.SetActive(false);
         pauseButtonPanel.SetActive(false);
         howToPlayPanel_PauseUI.SetActive(false);
+        LoadingPanel.SetActive(false);
 
         isPauseOn = false;
         heartCount = hearts.Length;
+        hadTalked = false;
         
         Camara1 = GameObject.FindObjectOfType<MainCamara>();
 
@@ -163,12 +167,19 @@ public class GameManager : MonoBehaviour
     public void StageChange()
     {
         nowStage++;
+        LoadingPanel.SetActive(true);
+        Invoke("OutLoadingPanel", 1);
     }
 
     public void NPCText(GameObject scanObj)
     {
         scanObject = scanObj;
         InteractiveCode objCode = scanObject.GetComponent<InteractiveCode>();
+        if (objCode.codeNumber == 10000 && unicornHorns > 2)
+        {
+            StageChange();
+            return;
+        }
         Talk(objCode.codeNumber, objCode.isNPC, scanObj);
 
         talkPanel.SetActive(isTextOn);
@@ -182,6 +193,8 @@ public class GameManager : MonoBehaviour
         {
             isTextOn = false;
             talkIndex = 0;
+            if (id == 1000)
+                hadTalked = true;
             if (!isNPC)
             {
                 switch (id)
@@ -208,5 +221,19 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         print("Game Over");
+    }
+
+    public void GameSave()
+    {
+
+    }
+    public void GameLoad()
+    {
+
+    }
+
+    void OutLoadingPanel()
+    {
+        LoadingPanel.SetActive(false);
     }
 }

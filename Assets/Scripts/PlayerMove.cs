@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
 
     //gm
     GameManager manager;
+    int currentStage;
 
     //점프 관련
     public float jumpPower = 10;
@@ -45,6 +46,7 @@ public class PlayerMove : MonoBehaviour
         npc = GetComponent<NPCInteraction>();
         manager = GameObject.FindObjectOfType<GameManager>();
         startingPoint[0] = gameObject.transform.position;
+        currentStage = manager.nowStage;
 
         interText.color = new Color(interText.color.r, interText.color.g, interText.color.b, 0f);
 
@@ -73,7 +75,7 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (Input.GetButton("Jump") && jumpCount < maxJump)
+        if (Input.GetButton("Jump") && jumpCount < maxJump && !manager.isTextOn)
         {
             rigid.velocity = new Vector2(rigid.velocity.x, jumpPower);
             jumpCount++;
@@ -85,13 +87,19 @@ public class PlayerMove : MonoBehaviour
         {
             manager.NPCText(npcScan);
         }
+
+        if(currentStage != manager.nowStage)
+        {
+            currentStage = manager.nowStage;
+            gameObject.transform.position = startingPoint[currentStage];
+        }
     }
 
     private void FixedUpdate()
     {
         
         //컨트롤에 의한 이동
-        float h = Input.GetAxisRaw("Horizontal");
+        float h = manager.isTextOn ? 0 : Input.GetAxisRaw("Horizontal");
         rigid.velocity = new Vector2(h * maxSpeed, rigid.velocity.y);
 
         //###레이케스트 확인

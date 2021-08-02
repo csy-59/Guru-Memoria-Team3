@@ -17,7 +17,7 @@ public class MainCamara : MonoBehaviour
     private Camera theCamera;
 
     //gm
-    GameManager gm;
+    public GameManager gm;
 
     // Start is called before the first frame update
     void Start()
@@ -33,10 +33,12 @@ public class MainCamara : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
     private void LateUpdate()
     {
+        minBound = bound[gm.nowStage].bounds.min;
+        maxBound = bound[gm.nowStage].bounds.max;
+
         //transform.position = new Vector3(target.position.x, target.position.y, -10f);
         transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * speed);
         transform.position = new Vector3(transform.position.x, transform.position.y, -10f);
@@ -46,4 +48,5 @@ public class MainCamara : MonoBehaviour
 
         this.transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
+
 }

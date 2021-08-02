@@ -18,6 +18,17 @@ public class GameManager : MonoBehaviour
     DeathMenu death;
     public bool isDeath;
 
+    //InGame UI 관련
+    public GameObject inGameUI;
+    public Text uniconCount;
+    public Image potion;
+    public Text potionCount;
+    public Image doll;
+    public Text dollcount;
+    public Image playerHeart;
+    public Sprite[] hearts;
+    int heartCount;
+
     //Pause UI 관련
     public GameObject PauseUI;
     PauseMenu pause;
@@ -36,7 +47,7 @@ public class GameManager : MonoBehaviour
     //아이템 관련
     public int Doll = 0;            //layer 15
     public int unicornHorns = 0;    //layer 16
-    public int candle = 0;          //layer 17
+   // public int candle = 0;          //layer 17
     public int medicine = 0;        //layer 18
 
     //스테이지 전환 관련
@@ -52,6 +63,7 @@ public class GameManager : MonoBehaviour
         death = DeathUI.GetComponent<DeathMenu>();
         pause = PauseUI.GetComponent<PauseMenu>();
 
+        inGameUI.SetActive(false);
         talkPanel.SetActive(false);
         startPanel.SetActive(true);
         howToPlayPanel.SetActive(false);
@@ -61,6 +73,7 @@ public class GameManager : MonoBehaviour
         howToPlayPanel_PauseUI.SetActive(false);
 
         isPauseOn = false;
+        heartCount = hearts.Length;
         
         Camara1 = GameObject.FindObjectOfType<MainCamara>();
 
@@ -70,6 +83,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //플레이어 사망
+        if (player.currentHp == 0)
+        {
+            Time.timeScale = 0;
+            isDeath = true;
+            DeathUI.SetActive(true);
+        }
+
         //###UI관련
         //Start UI;
         startPanel.SetActive(!start.isClickHowToPlay);
@@ -77,6 +98,7 @@ public class GameManager : MonoBehaviour
         if (start.isGameStart)
         {
             startUI.SetActive(false);
+            inGameUI.SetActive(true);
             Time.timeScale = 1;
         }
         //Death UI;
@@ -116,13 +138,26 @@ public class GameManager : MonoBehaviour
             pause.isQuit = false;
             GameOver();
         }
+        //item UI
+        uniconCount.text = "" + unicornHorns + " / 10";
+        potion.color = medicine > 0 ? new Color(potion.color.r, potion.color.g, potion.color.b, 1f) : new Color(potion.color.r, potion.color.g, potion.color.b, 0f);
+        potionCount.text = medicine > 0 ? "" + medicine : "";
+        doll.color = Doll > 0 ? new Color(doll.color.r, doll.color.g, doll.color.b, 1f) : new Color(doll.color.r, doll.color.g, doll.color.b, 0f);
+        dollcount.text = Doll > 0 ? "" + Doll : "";
+        playerHeart.sprite = player.currentHp > 0 ? hearts[player.currentHp - 1] : null;
 
-        //플레이어 사망
-        if (player.currentHp == 0)
+        //##
+
+
+        //아이템 사용 관련
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Time.timeScale = 0;
-            isDeath = true;
-            DeathUI.SetActive(true);
+            medicine--;
+            player.currentHp++;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Doll--;
         }
     }
     public void StageChange()
@@ -148,23 +183,20 @@ public class GameManager : MonoBehaviour
             isTextOn = false;
             talkIndex = 0;
             if (!isNPC)
-                Destroy(scanObj);
-            else
             {
                 switch (id)
                 {
                     case 100:
-                        candle++;
-                        break;
-                    case 101:
-                    case 102:
                         medicine++;
                         break;
-                    case 103:
-                    case 104:
+                    case 101:
                         unicornHorns++;
                         break;
+                    case 500:
+                        Doll++;
+                        break;
                 }
+                Destroy(scanObj);
             }
             return;
         }

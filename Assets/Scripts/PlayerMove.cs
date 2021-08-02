@@ -35,7 +35,7 @@ public class PlayerMove : MonoBehaviour
     public Vector2[] startingPoint;
 
     //사운드 플레이어
-    AudioSource audioSrc_jump;
+   // AudioSource audioSrc_jump;
 
     // Start is called before the first frame update
     void Start()
@@ -75,11 +75,10 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetButton("Jump") && jumpCount < maxJump)
         {
-            print("Jump");
             rigid.velocity = new Vector2(rigid.velocity.x, jumpPower);
             jumpCount++;
 
-            audioSrc_jump.Play();
+            //audioSrc_jump.Play();
         }
 
         if (Input.GetKeyDown(KeyCode.E) && npcScan != null)
@@ -107,7 +106,6 @@ public class PlayerMove : MonoBehaviour
                 if (rayHitDown.distance < 3)
                 {
                     jumpCount = 0;
-                    print("Down Hit: " + rayHitDown.collider.name);
                 }
             }
         }
@@ -118,7 +116,6 @@ public class PlayerMove : MonoBehaviour
 
         if (rayHitNPC.collider != null)
         {
-            print(rayHitNPC.collider.name);
             npcScan = rayHitNPC.collider.gameObject;
         }
         else
@@ -132,7 +129,6 @@ public class PlayerMove : MonoBehaviour
 
         if (rayHitNPC.collider != null)
         {
-            print(rayHitNPC.collider.name);
             npcScan = rayHitNPC.collider.gameObject;
         }
         else
@@ -159,10 +155,11 @@ public class PlayerMove : MonoBehaviour
                     manager.unicornHorns++;
                     print("Unicorn Horns");
                     break;
-                case 17:
+                /*case 17:
                     manager.candle++;
                     print("candle");
                     break;
+                */
                 case 18:
                     manager.medicine++;
                     print("medicine");
@@ -171,7 +168,6 @@ public class PlayerMove : MonoBehaviour
         }
         else if (collisionedObject.CompareTag("NPC"))
         {
-            print(collisionedObject.name);
             collisionedObject.SetActive(false);
 
             if (!textShowed)
@@ -193,10 +189,8 @@ public class PlayerMove : MonoBehaviour
         gameObject.layer = 25;
         sr.color = new Color(1, 1, 1, 0.4f);
         int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1;
-        print(dirc);
         rigid.AddForce(new Vector2(dirc, 1), ForceMode2D.Impulse);
 
-        print("attacked");
         currentHp -= damage;
         if(currentHp < 0)
         {

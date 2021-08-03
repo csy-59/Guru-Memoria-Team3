@@ -25,6 +25,9 @@ public class NPCInteraction : MonoBehaviour
             code.codeNumber = 1003;
 
         if (gm.hadTalked && gm.Doll > 0)
+            code.codeNumber = 1005;
+
+        if (gm.hadTalked && gm.unicornHorns > 2)
             code.codeNumber = 1004;
     }
 

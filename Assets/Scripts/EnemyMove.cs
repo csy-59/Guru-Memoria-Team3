@@ -37,7 +37,14 @@ public class EnemyMove : MonoBehaviour
         GameObject collisionedObject = collision.gameObject;
 
         //tag 설정 필요!
-        if (collisionedObject.CompareTag("EndPoint"))
+        if (collisionedObject.CompareTag("Attack"))
+        {
+            if (health == 0)
+                gameObject.SetActive(false);
+            else
+                health--;
+        }
+        else if (collisionedObject.CompareTag("EndPoint"))
         {
             currentSpeed *= -1;
             sp.flipX = (speed < 0);
@@ -46,13 +53,6 @@ public class EnemyMove : MonoBehaviour
         {
             currentSpeed = 0;
             Attack();
-        }
-        else if(collisionedObject.CompareTag("Attack"))
-        {
-            if (health == 0)
-                Destroy(gameObject);
-            else
-                health--;
         }
     }
 

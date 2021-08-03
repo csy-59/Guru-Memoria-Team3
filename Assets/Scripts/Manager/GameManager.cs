@@ -154,12 +154,12 @@ public class GameManager : MonoBehaviour
 
 
         //아이템 사용 관련
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && medicine > 0 && player.currentHp < player.maxHp)
         {
             medicine--;
             player.currentHp++;
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && Doll > 0)
         {
             Doll--;
         }
